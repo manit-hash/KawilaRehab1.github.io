@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบส่งบันทึกหลังการสอนออนไลน์ กิจกรรมฟื้นฟูฯ โรงเรียนกาวิละอนุกูล</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased text-slate-800">
+  <div class="main-wrapper min-h-screen py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col justify-between">
+    
+    <!-- Header Section -->
+    <header class="header-glass p-5 sm:p-7 mb-6 relative overflow-hidden">
+      <!-- Decorative Cute School Badges -->
+      <div class="absolute -right-6 -bottom-6 w-36 h-36 bg-indigo-100/60 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -left-6 -top-6 w-36 h-36 bg-amber-100/60 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-5 relative z-10">
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-4 text-center md:text-left">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-indigo-200 border-2 border-white flex-shrink-0 animate-float">
+            <i class="fa-solid fa-graduation-cap text-3xl sm:text-4xl"></i>
+          </div>
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-semibold mb-1">
+              <i class="fa-solid fa-school text-indigo-500"></i> โรงเรียนกาวิละอนุกูล จังหวัดเชียงใหม่
+            </div>
+            <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+              ระบบส่งบันทึกหลังการสอนออนไลน์
+            </h1>
+            <p class="text-xs sm:text-sm text-indigo-600 font-medium">
+              กิจกรรมฟื้นฟูสมรรถภาพคนพิการทางการศึกษา (23 ฐานการเรียนรู้)
+            </p>
+          </div>
+        </div>
+
+        <!-- Clock & External Links -->
+        <div class="flex flex-col sm:flex-row md:flex-col items-center md:items-end gap-2 text-right">
+          <div class="bg-white/90 border border-slate-200/80 px-3.5 py-2 rounded-xl shadow-xs flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <div class="text-xs font-semibold text-slate-700">
+              <span id="currentLiveClock" class="font-bold text-indigo-900">-</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="https://docs.google.com/spreadsheets/d/1YjKhE7PHnLh6o4rFSXHZbDwUnQDLn0Cdx37uPj1LcU0/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" 
+               class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg font-medium shadow-xs transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-excel"></i> ชีตบันทึกข้อมูล
+            </a>
+            <a href="https://drive.google.com/drive/folders/1KtqAJC3bcw11q3TB2_Nc89xiF7hhx0WC" target="_blank" rel="noopener noreferrer" 
+               class="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium shadow-xs transition flex items-center gap-1.5">
+              <i class="fa-brands fa-google-drive"></i> โฟลเดอร์ไดรฟ์
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex flex-wrap items-center gap-2 mt-6 pt-5 border-t border-slate-200/70">
+        <button type="button" id="tabBtn_form" onclick="switchTab('form')" class="tab-btn active">
+          <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+          <span>ส่งบันทึกหลังการสอน</span>
+        </button>
+        <button type="button" id="tabBtn_history" onclick="switchTab('history')" class="tab-btn">
+          <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+          <span>ประวัติการส่งงาน</span>
+        </button>
+        <button type="button" id="tabBtn_matrix" onclick="switchTab('matrix')" class="tab-btn">
+          <i class="fa-solid fa-table-cells text-lg"></i>
+          <span>ตารางสรุป 23 ฐานรายเดือน</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 space-y-6">
+
+      <!-- ========================================== -->
+      <!-- TAB 1: FORM SUBMISSION (ส่งบันทึกหลังการสอน) -->
+      <!-- ========================================== -->
+      <section id="tabPane_form" class="content-card p-6 sm:p-8">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-xl">
+              <i class="fa-solid fa-pen-nib"></i>
+            </div>
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900">ฟอร์มส่งบันทึกหลังการสอน</h2>
+              <p class="text-xs text-slate-500">กรุณาเลือกกลุ่ม ฐาน วันที่ และแนบไฟล์เอกสารเพื่อบันทึกข้อมูล</p>
+            </div>
+          </div>
+          <!-- Real-time Status Preview -->
+          <div id="statusPreviewBadge" class="cute-badge badge-ontime">
+            <i class="fa-solid fa-circle-check"></i> ระบบจะบันทึกสถานะ: ส่งแล้ว (ตรงเวลา)
+          </div>
+        </div>
+
+        <form id="submissionForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- 1. ช่องเลือกกลุ่มฐาน -->
+            <div>
+              <label for="groupSelect" class="block text-sm font-semibold text-slate-700 mb-2">
+                <i class="fa-solid fa-layer-group text-indigo-500 mr-1.5"></i> 1. กลุ่มฐานการเรียนรู้ <span class="text-red-500">*</span>
+              </label>
+              <select id="groupSelect" required class="form-input-custom cursor-pointer font-medium">
+                <!-- เติมผ่าน app.js -->
+              </select>
+              <p class="text-xs text-slate-400 mt-1">มี 3 กลุ่ม: ฐานประจำ, นักเรียนประถม และนักเรียนมัธยม</p>
+            </div>
+
+            <!-- 2. ช่องเลือกฐาน (แยกช่องกลุ่ม แยกช่องฐาน) -->
+            <div>
+              <label for="baseSelect" class="block text-sm font-semibold text-slate-700 mb-2">
+                <i class="fa-solid fa-shapes text-indigo-500 mr-1.5"></i> 2. ฐานการเรียนรู้ (23 ฐาน) <span class="text-red-500">*</span>
+              </label>
+              <select id="baseSelect" required class="form-input-custom cursor-pointer font-medium">
+                <!-- เติมผ่าน app.js -->
+              </select>
+              <p class="text-xs text-slate-400 mt-1">รายชื่อจะกรองตามกลุ่มที่เลือก หรือเลือกฐานแล้วระบบจัดกลุ่มให้อัตโนมัติ</p>
+            </div>
+
+            <!-- 3. วันที่เลือกส่งงานตามปฏิทิน -->
+            <div>
+              <label for="targetDate" class="block text-sm font-semibold text-slate-700 mb-2">
+                <i class="fa-regular fa-calendar-days text-indigo-500 mr-1.5"></i> 3. วันที่เลือกส่งงานตามปฏิทิน (วันที่จัดการเรียนการสอน) <span class="text-red-500">*</span>
+              </label>
+              <input type="date" id="targetDate" required class="form-input-custom font-medium cursor-pointer">
+              <p class="text-xs text-slate-400 mt-1">เลือกวันที่จัดกิจกรรม (หากเลือกวันที่ผ่านมา ระบบจะบันทึกเป็น "ส่งย้อนหลัง" อัตโนมัติ)</p>
+            </div>
+
+            <!-- 4. วันที่ส่งงาน (ประทับวันและเวลา) -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">
+                <i class="fa-regular fa-clock text-indigo-500 mr-1.5"></i> 4. วันที่และเวลาส่งงาน (ประทับเวลาอัตโนมัติ)
+              </label>
+              <div class="form-input-custom bg-slate-50 text-slate-600 font-medium flex items-center justify-between cursor-not-allowed">
+                <span>ระบบจะประทับเวลาปัจจุบันขณะกดส่ง</span>
+                <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  <i class="fa-solid fa-lock text-xs mr-1"></i> Auto-Timestamp
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 mt-1">เวลาปัจจุบัน ณ ประเทศไทย (GMT+7) จะถูกบันทึกลงในระบบอย่างแม่นยำ</p>
+            </div>
+          </div>
+
+          <!-- 5. อัปโหลดไฟล์หลายประเภท & แปลง Base64 -->
+          <div class="pt-2">
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-sm font-semibold text-slate-700">
+                <i class="fa-solid fa-paperclip text-indigo-500 mr-1.5"></i> 5. แนบไฟล์เอกสารบันทึกหลังการสอน <span class="text-red-500">*</span>
+              </label>
+              <span id="selectedFilesCount" class="text-xs font-bold text-indigo-600"></span>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div id="dropzone" class="dropzone-container p-6 sm:p-8 text-center flex flex-col items-center justify-center">
+              <input type="file" id="fileInput" multiple class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp,.zip">
+              <div class="w-14 h-14 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-2xl mb-3 shadow-xs">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <p class="text-sm font-semibold text-slate-800">
+                คลิกเพื่อเลือกไฟล์ หรือลากไฟล์มาวางที่นี่
+              </p>
+              <p class="text-xs text-slate-500 mt-1 max-w-md">
+                รองรับหลายประเภทไฟล์ เช่น <b>PDF, Word (DOCX), Excel, PowerPoint, รูปภาพ (JPG/PNG)</b> สามารถเลือกได้หลายไฟล์พร้อมกัน
+              </p>
+            </div>
+
+            <!-- รายการไฟล์ที่เลือก -->
+            <div class="mt-4">
+              <div id="selectedFilesContainer" class="space-y-2">
+                <!-- เติมรายการไฟล์ผ่าน JavaScript -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-3">
+            <button type="reset" onclick="selectedFiles=[]; renderSelectedFilesList(); updateStatusPreview();" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition text-sm">
+              <i class="fa-solid fa-rotate-left mr-1.5"></i> ล้างข้อมูล
+            </button>
+            <button type="submit" id="submitBtn" class="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition text-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>บันทึกและส่งข้อมูล</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: SUBMISSION HISTORY (ประวัติการส่งงาน) -->
+      <!-- ========================================== -->
+      <section id="tabPane_history" class="content-card p-6 sm:p-8 hidden">
+        <div id="historySection">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-xl">
+                <i class="fa-solid fa-list-check"></i>
+              </div>
+              <div>
+                <h2 class="text-lg sm:text-xl font-bold text-slate-900">ประวัติการส่งบันทึกหลังการสอน</h2>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span id="historyTotalCount" class="text-xs text-indigo-600 font-semibold">กำลังโหลดข้อมูล...</span>
+                  <span class="text-xs text-slate-400">• แบ่งหน้าละ 20 รายการ</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- View Mode Buttons & Refresh -->
+            <div class="flex items-center gap-2 self-stretch sm:self-auto justify-end">
+              <button type="button" onclick="fetchHistoryFromSheet(true)" class="p-2 sm:px-3 sm:py-2 text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition flex items-center gap-1.5 shadow-xs" title="รีเฟรชข้อมูลจากชีต">
+                <i class="fa-solid fa-arrows-rotate text-indigo-500"></i>
+                <span class="hidden sm:inline">รีเฟรช</span>
+              </button>
+
+              <div class="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200">
+                <button type="button" id="btnViewTable" onclick="toggleHistoryViewMode('table')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 text-white transition flex items-center gap-1 shadow-xs" title="มุมมองตาราง">
+                  <i class="fa-solid fa-table-list"></i>
+                  <span>ตาราง</span>
+                </button>
+                <button type="button" id="btnViewGrid" onclick="toggleHistoryViewMode('grid')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 hover:text-slate-900 transition flex items-center gap-1" title="ดูประวัติส่งทั้งหมดแบบการ์ดเรียงเป็นแถว">
+                  <i class="fa-solid fa-grip"></i>
+                  <span>ดูประวัติทั้งหมด</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+            <div>
+              <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="historySearchInput" oninput="applyFiltersAndRenderHistory()" placeholder="ค้นหาชื่อฐาน, วันที่..." class="form-input-custom pl-9 text-xs">
+              </div>
+            </div>
+            <div>
+              <select id="historyBaseFilter" onchange="applyFiltersAndRenderHistory()" class="form-input-custom text-xs cursor-pointer">
+                <option value="">-- แสดงทุกฐานการเรียนรู้ (23 ฐาน) --</option>
+              </select>
+            </div>
+            <div>
+              <select id="historyStatusFilter" onchange="applyFiltersAndRenderHistory()" class="form-input-custom text-xs cursor-pointer">
+                <option value="">-- แสดงทุกสถานะ --</option>
+                <option value="ส่งแล้ว">เฉพาะส่งแล้ว (ตรงเวลา)</option>
+                <option value="ส่งย้อนหลัง">เฉพาะส่งย้อนหลัง</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Loading Indicator -->
+          <div id="historyLoading" class="hidden text-center py-8">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-sm font-medium animate-pulse border border-indigo-200">
+              <i class="fa-solid fa-spinner fa-spin"></i> กำลังดึงข้อมูลจาก Google Sheet...
+            </div>
+          </div>
+
+          <!-- History Content Area (Table or Grid Cards) -->
+          <div id="historyContentArea">
+            <!-- JavaScript จะเรนเดอร์ข้อมูลที่นี่ -->
+          </div>
+
+          <!-- Pagination Bar (จำกัดไม่เกิน 20 รายการต่อหน้า) -->
+          <div id="historyPagination" class="mt-4">
+            <!-- ปุ่มเปลี่ยนหน้า -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: MONTHLY MATRIX (ตารางสรุป 23 ฐานรายเดือน) -->
+      <!-- ========================================== -->
+      <section id="tabPane_matrix" class="content-card p-6 sm:p-8 hidden">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-xl">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900">ตารางสรุปการส่งของทั้ง 23 ฐาน เป็นรายเดือน</h2>
+              <p class="text-xs text-slate-500">ตรวจสอบย้อนหลังได้ทุกเดือน แสดงเครื่องหมาย "ส่งแล้ว" และ "ส่งย้อนหลัง" แยกแต่ละวัน</p>
+            </div>
+          </div>
+
+          <!-- Month / Year Selector -->
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <label for="matrixMonthSelector" class="text-xs font-semibold text-slate-600 whitespace-nowrap">
+              <i class="fa-regular fa-calendar text-indigo-500 mr-1"></i> เลือกเดือน:
+            </label>
+            <select id="matrixMonthSelector" class="form-input-custom text-xs font-bold text-indigo-900 cursor-pointer py-2">
+              <!-- เติมเดือนผ่าน JavaScript -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Monthly Summary Statistics -->
+        <div id="matrixStatsContainer">
+          <!-- สถิติรายเดือน -->
+        </div>
+
+        <!-- Matrix Table Container -->
+        <div id="matrixTableContainer">
+          <!-- JavaScript จะเรนเดอร์ Matrix 23 ฐาน x วันที่ 1-31 ที่นี่ -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="mt-8 text-center text-xs text-slate-600 pb-4">
+      <div class="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-2xl py-4 px-6 inline-block shadow-sm">
+        <p class="font-semibold text-slate-800">
+          ระบบส่งบันทึกหลังการสอนออนไลน์ กิจกรรมฟื้นฟูสมรรถภาพคนพิการทางการศึกษา โรงเรียนกาวิละอนุกูล
+        </p>
+        <p class="text-slate-500 mt-1">
+          รองรับการอัปโหลดไฟล์ Base64 • เชื่อมโยง Google Sheet & Google Drive อัตโนมัติ • ตรวจสอบสถานะการส่งย้อนหลัง
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
